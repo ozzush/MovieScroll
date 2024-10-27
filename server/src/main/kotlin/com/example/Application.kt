@@ -11,11 +11,11 @@ fun main() {
 }
 
 fun Application.module() {
+    configureSessions()
     configureSecurity()
     configureHTTP()
     configureMonitoring()
     configureSerialization()
     configureDatabases()
     configureSockets()
-    configureRouting()
 }
