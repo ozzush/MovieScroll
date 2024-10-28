@@ -12,7 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 
-class Person(
+data class Person(
     val name: String,
     val surname: String,
     val dateOfBirth: String? = null,

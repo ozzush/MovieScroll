@@ -9,15 +9,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun InfiniteScrollList(generateContent: (Int) -> @Composable (() -> Unit)) {
-    var items by remember { mutableStateOf(List(20) { generateContent(it) }) }
+fun InfiniteScrollList(
+    items: MutableState<List<ComposableElement>>,
+    expandBy: Int = 5,
+    generateContent: (Int) -> ComposableElement,
+) {
+    var itemsRemember by remember { items }
+    fun expandItems() {
+        itemsRemember = itemsRemember + List(expandBy) { generateContent(it + itemsRemember.size) }
+    }
+
+    if (itemsRemember.isEmpty()) expandItems()
 
     LazyColumn(modifier = Modifier.padding(horizontal = 8.dp).fillMaxSize()) {
-        itemsIndexed(items) { index, item ->
+        itemsIndexed(itemsRemember) { index, item ->
             item()
-            if (index == items.lastIndex) {
-                items = items + List(20) { generateContent(it + items.size) }
-            }
+            if (index == itemsRemember.lastIndex) expandItems()
         }
     }
 }
