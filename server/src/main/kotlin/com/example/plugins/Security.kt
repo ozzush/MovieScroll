@@ -8,6 +8,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import kotlinx.serialization.Serializable
 
 fun Application.configureSecurity() {
     authentication {
@@ -29,17 +30,27 @@ fun Application.configureSecurity() {
     }
     routing {
         authenticate("auth-oauth-google") {
-            get("login") {
+            get("/login") {
                 call.respondRedirect("/callback")
             }
 
             get("/callback") {
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.authentication.principal()
                 call.sessions.set(UserSession(principal?.accessToken.toString()))
-                call.respondRedirect("/hello")
+                call.respondRedirect("/")
             }
+        }
+
+        get("/logout") {
+            call.sessions.clear<UserSession>()
+            call.respondRedirect("/")
+        }
+
+        get("/") {
+            call.respondText("Session: ${call.sessions.get<UserSession>()?.accessToken}")
         }
     }
 }
 
-class UserSession(accessToken: String)
+@Serializable
+class UserSession(val accessToken: String)
