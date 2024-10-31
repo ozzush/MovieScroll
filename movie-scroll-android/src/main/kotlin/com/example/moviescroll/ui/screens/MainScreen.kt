@@ -59,7 +59,7 @@ class MainScreen(override val navigator: NavHostController) : ScreenWithNavigato
 
     @Composable
     fun MoviesTab() = InfiniteScrollList(movieItems) { _ ->
-        val movie = runBlocking { Person.ALL_PEOPLE.random() }
+        val movie = runBlocking { Movie.ALL_MOVIES.random() }
         return@InfiniteScrollList { movie.Element() }
     }
 
